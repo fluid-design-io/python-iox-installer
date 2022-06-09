@@ -104,6 +104,10 @@ There are two modes it can run:
 
     python3 iox_benja.py -c ./examples/iox_install.csv -m list 
 
+**List profiles**
+
+    python3 iox_benja.py -c ./examples/iox_install.csv -m profiles
+
 ---
 
 License: MIT
