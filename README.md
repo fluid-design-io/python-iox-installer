@@ -1,11 +1,22 @@
 # Python IOx Installer
 
-### install multiple iox_benja at once with python threading
+### install multiple iox_benja at once 🕛
 
 # Introduction
 
 This program is an automated installer for the Cisco Iox client software.
 There are two modes it can run:
+
+# Features
+
+    * Import a list of Iox devices from a CSV file
+    * Create/delete multiple iox profiles
+    * Install multiple Iox clients
+    * Generate package_config.ini file automatically based on profile ip
+    * Check AP status and list of installed apps
+    * Threading support, runs multiple ioxclient at once
+
+# Commands
 
 - Batch Mode _(recommend)_:
   - Runs commands from a csv file
@@ -37,27 +48,31 @@ There are two modes it can run:
 
 # Example Commands
 
-    #### Batch Mode
     **Full install**
     python3 iox_benja.py -c ./examples/example.csv
+  
     **Create profile**
     python3 iox_benja.py -m create -c ./examples/example.csv
+  
     **Delete profile**
     python3 iox_benja.py -m delete -c ./examples/example.csv
+  
     **Install client**
     python3 iox_benja.py -m install -c ./examples/example.csv
+  
     **Uninstall client**
     python3 iox_benja.py -m uninstall -c ./examples/example.csv
+  
     **Start client**
     python3 iox_benja.py -m start -c ./examples/example.csv
+  
     **Stop client**
     python3 iox_benja.py -m stop -c ./examples/example.csv
+  
     **Status client**
     python3 iox_benja.py -m status -c ./examples/example.csv
+  
     **List apps**
     python3 iox_benja.py -m list -c ./examples/example.csv
-
-
-
 
 Author: Oliver Pan, 2022
