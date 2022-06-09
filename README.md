@@ -14,6 +14,7 @@ This program is an automated installer for the Cisco Iox client software.
 - Generate package_config.ini file automatically based on profile ip
 - Check AP status and list of installed apps
 - Threading support, runs multiple ioxclient at once
+- Simplified listing status, list and profiles overhead, only showing what's important
 
 # Requirements
 
@@ -50,7 +51,7 @@ There are two modes it can run:
     - `-pass`, `--password`: required= False,The password of the profile
     - `-i`, `--image`: required=False,A .tar file containing the Iox client software
     - `-a`, `--activation`: required=False,A json file containing the activation key
-    - `-m`, `--mode`: required=False, choices=[`full`, `create`, `install`, `status`, `start`, `stop`, `uninstall`, `list`, `delete`], default=`full`, The mode of the program.
+    - `-m`, `--mode`: required=False, choices=[`full`, `create`, `install`, `status`, `start`, `stop`, `uninstall`, `list`, `delete`, `profiles`], default=`full`, The mode of the program.
       - `full`: `Default`, create profile, install, start the client.
       - `create`: create profile.
       - `delete`: delete the profile
@@ -60,6 +61,7 @@ There are two modes it can run:
       - `stop`: stop the client.
       - `status`: check the status of the client.
       - `list`: list all the apps and states installed on the client.
+      - `profiles`: list all the profiles.
     - `-h`, `--help`: show this help message and exit
 
 ---
