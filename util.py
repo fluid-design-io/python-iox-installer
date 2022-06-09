@@ -31,8 +31,10 @@ def get_cwd(path='ioxclient'):
     if path:
         cwd = os. path.join(cwd, path)
     # replace " " with "\\ "
-    return cwd.replace(" ", "\\ ")
-
+    # check if is mac or windows
+    if os.name == 'nt':
+        cwd = cwd.replace(" ", "\\ ")
+    return cwd
 # A function make this command used many times: subprocess.Popen(f'.\\ioxclient.exe --profile {ap_profile} app install iox_benja .\\{ap_image_path}', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
