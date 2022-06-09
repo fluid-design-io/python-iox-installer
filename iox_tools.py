@@ -152,12 +152,15 @@ def start_iox_app(ap_profile):
                 color_text(
                     f"{ap_profile}: Please make sure the USB device is plugged in.", bcolors.FAIL)
             break
+
+
 def stop_iox_app(ap_profile):
     program_path = get_cwd()
     ps_stop = run_terminal(
         f"{program_path} --profile {ap_profile} app stop iox_benja")
     ps_stop.communicate()[0].decode()
     color_text(f"{ap_profile} is stopped", bcolors.OKGREEN)
+
 
 def check_iox_status(ap_profile, show_output=True):
     program_path = get_cwd()
@@ -247,3 +250,17 @@ def uninstall_iox(ap_profile):
     else:
         color_text(
             f'{ap_profile} is uninstalled', bcolors.OKGREEN)
+
+
+def show_profiles():
+    program_path = get_cwd()
+    ps_list = run_terminal(
+        f'{program_path} profiles list')
+    res = ps_list.communicate()[0].decode()
+    res = res.split('\n')
+    for line in res:
+        if "Profile Name" in line:
+            color_text(f"Name: {line[16:]}", bcolors.HEADER)
+        if "Host IP:" in line:
+            color_text(f"IP:   {line[11:]}", bcolors.ENDC)
+            print("-" * 40)

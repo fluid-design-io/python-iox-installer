@@ -22,14 +22,14 @@ def confirm_before_run():
     # if csv is not provided, the program will use the rest of the variables.
     if args.csv is None and args.profile is not None and args.ip is not None and args.username is not None and args.password is not None:
         color_text(
-            f"\n🚀Running Iox client software for {args.profile}🚀\n", bcolors.OKGREEN)
+            f"\n🚀Running Iox client software for {args.profile}🚀\n", bcolors.HEADER)
         color_text(
             "This feature is not yet implemented. Exiting program...", bcolors.OKCYAN)
         return False
     else:
         csv = "iox_install.csv" if args.csv is None else args.csv
         color_text(
-            f"\n🚀Running Iox client software for {csv}🚀\n", bcolors.OKGREEN)
+            f"\n🚀Running Iox client software for {csv}🚀\n", bcolors.HEADER)
     if args.mode == "full" or args.mode == "create":
         # confirm before running, if user enter "n" or "N", exit the program
         return confirm_input('Are you sure you want to install Iox client software?')
@@ -38,5 +38,5 @@ def confirm_before_run():
             f"Are you sure you want to {args.mode} Iox client software?")
     if args.mode == "delete":
         return confirm_input(f"Are you sure you want to delete profile(s)")
-    if args.mode == "status" or args.mode == "list":
+    if args.mode == "status" or args.mode == "list" or args.mode == "profiles":
         return True

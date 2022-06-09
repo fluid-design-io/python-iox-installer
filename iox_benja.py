@@ -97,6 +97,10 @@ def main():
                     color_text("Stoping Iox client software...\n",
                                bcolors.OKGREEN)
                     executor.map(stop_iox_app, df['profile'])
+                elif install_mode == "profiles":  # show iox profiles
+                    color_text("Listing profiles...\n",
+                               bcolors.OKGREEN)
+                    show_profiles()
 
 
 if confirm_before_run():

@@ -19,7 +19,7 @@ def get_args():
     parser.add_argument("-a", "--activation", required=False, default="activation.json",
                         help="A json file containing the activation key")
     parser.add_argument("-m", "--mode", required=False, default="full",
-                        choices=["full", "create", "install", "status", "start", "stop", "uninstall", "list", "delete"],   help="""
+                        choices=["full", "create", "install", "status", "start", "stop", "uninstall", "list", "delete", "profiles"],   help="""
                         The mode of the program.
                         full: create profile, install, start the client. SSH to the AP and enable USB.
                         create: create profile.
@@ -30,6 +30,7 @@ def get_args():
                         uninstall: uninstall the client.
                         list: list all the apps and states installed on the client.
                         delete: delete the profile.
+                        profiles: list all the profiles.
                         """)
     args = parser.parse_args()
     return args
