@@ -22,8 +22,6 @@ def get_cwd():
 
 def read_csv(file_path):
     cwd = get_cwd()
-    print("Reading csv file...")
     df = pd.read_csv(cwd + "/" + file_path)
-    print("csv file read")
     print("\n")
     return df
