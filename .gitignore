@@ -1,4 +1,4 @@
 # ignore the releases folder
 releases/
-.iox_install.csv
-.iox_cisco_live.csv
+/.csv
+./package_benja_v_1_8_7_c1_small.tar
