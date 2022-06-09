@@ -3,7 +3,7 @@ import time
 import subprocess
 
 
-def execute_command(ps, command, sleep=0.25):
+def execute_command(ps, command, sleep=0.03):
     time.sleep(sleep)
     ps.stdin.write(command.encode())
 

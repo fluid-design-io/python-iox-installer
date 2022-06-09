@@ -12,7 +12,7 @@ def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password):
     with yaspin(Spinners.moon, text=f"Creating profile: {ap_profile}") as sp:
         ps = run_terminal(f'{program_path} profiles create')
 
-        execute_command(ps, ap_profile + "\n", sleep=1)  # profile name
+        execute_command(ps, ap_profile + "\n", sleep=0.3)  # profile name
         sp.text = f"Creating profile: {ap_profile}"
         execute_command(ps, ap_ip + "\n")  # ip address
         sp.text = f"Creating profile: {ap_ip}"

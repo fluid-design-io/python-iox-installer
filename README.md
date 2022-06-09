@@ -68,39 +68,39 @@ There are two modes it can run:
 
 **Full install**
 
-    python3 iox_benja.py -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv
 
 **Create profile**
 
-    python3 iox_benja.py -m create -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m create 
 
 **Delete profile**
 
-    python3 iox_benja.py -m delete -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m delete 
 
 **Install client**
 
-    python3 iox_benja.py -m install -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m install 
 
 **Uninstall client**
 
-    python3 iox_benja.py -m uninstall -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m uninstall 
 
 **Start client**
 
-    python3 iox_benja.py -m start -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m start 
 
 **Stop client**
 
-    python3 iox_benja.py -m stop -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m stop 
 
 **Status client**
 
-    python3 iox_benja.py -m status -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m status 
 
 **List apps**
 
-    python3 iox_benja.py -m list -c ./examples/example.csv
+    python3 iox_benja.py -c ./examples/iox_install.csv -m list 
 
 ---
 

@@ -57,11 +57,11 @@ def main():
         delete_iox_profile(install_type, csv_path, ap_profile)
     if install_mode == "create":
         color_text("Exiting program...", bcolors.OKCYAN)
-        exit()
+        return
     elif install_type == 'single' and (ap_image_path is None or ap_activation is None):
         color_text(
             "No image or activation key provided. Exiting program...", bcolors.OKCYAN)
-        exit()
+        return
     # MAIN PROGRAM
     else:
         if install_type == "single":
