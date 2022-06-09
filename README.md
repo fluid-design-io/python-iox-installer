@@ -5,7 +5,7 @@
 # Introduction
 
 This program is an automated installer for the Cisco Iox client software.
-There are two modes it can run:
+
 
 # Features
 
@@ -16,8 +16,27 @@ There are two modes it can run:
 * Check AP status and list of installed apps
 * Threading support, runs multiple ioxclient at once
 
+# Requirements
+
+    # Reqires Python 3.6+
+    pip install pandas
+    pip install --upgrade yaspin
+
+    # Download ioxclient from [here](https://developer.cisco.com/docs/iox/#!iox-resource-downloads)
+    
+    # Then unzip the file and move it to the same directory as this program, make sure the 'ioxclient' is inside the directory
+    
+
+# Usage
+
+    python3 iox_benja.py # variables...
+    
+    # Run the program with the --help flag to see the usage
+
+
 # Commands
 
+There are two modes it can run:
 - Batch Mode _(recommend)_:
   - Runs commands from a csv file
   - An example of csv file can be found in the `examples` dir
@@ -49,30 +68,41 @@ There are two modes it can run:
 # Example Commands
 
 **Full install**
-    `python3 iox_benja.py -c ./examples/example.csv`
+
+`python3 iox_benja.py -c ./examples/example.csv`
 
 **Create profile**
-    `python3 iox_benja.py -m create -c ./examples/example.csv`
+
+`python3 iox_benja.py -m create -c ./examples/example.csv`
 
 **Delete profile**
-    `python3 iox_benja.py -m delete -c ./examples/example.csv`
+
+`python3 iox_benja.py -m delete -c ./examples/example.csv`
 
 **Install client**
-    `python3 iox_benja.py -m install -c ./examples/example.csv`
+
+`python3 iox_benja.py -m install -c ./examples/example.csv`
 
 **Uninstall client**
-    `python3 iox_benja.py -m uninstall -c ./examples/example.csv`
+
+`python3 iox_benja.py -m uninstall -c ./examples/example.csv`
 
 **Start client**
-    `python3 iox_benja.py -m start -c ./examples/example.csv`
+
+`python3 iox_benja.py -m start -c ./examples/example.csv`
 
 **Stop client**
-    `python3 iox_benja.py -m stop -c ./examples/example.csv`
+
+`python3 iox_benja.py -m stop -c ./examples/example.csv`
 
 **Status client**
-    `python3 iox_benja.py -m status -c ./examples/example.csv`
+
+`python3 iox_benja.py -m status -c ./examples/example.csv`
 
 **List apps**
-    `python3 iox_benja.py -m list -c ./examples/example.csv`
+
+`python3 iox_benja.py -m list -c ./examples/example.csv`
+
+
 ---
 Author: Oliver Pan, 2022
