@@ -49,30 +49,30 @@ There are two modes it can run:
 # Example Commands
 
 **Full install**
-    python3 iox_benja.py -c ./examples/example.csv
+    `python3 iox_benja.py -c ./examples/example.csv`
 
 **Create profile**
-    python3 iox_benja.py -m create -c ./examples/example.csv
+    `python3 iox_benja.py -m create -c ./examples/example.csv`
 
 **Delete profile**
-    python3 iox_benja.py -m delete -c ./examples/example.csv
+    `python3 iox_benja.py -m delete -c ./examples/example.csv`
 
 **Install client**
-    python3 iox_benja.py -m install -c ./examples/example.csv
+    `python3 iox_benja.py -m install -c ./examples/example.csv`
 
 **Uninstall client**
-    python3 iox_benja.py -m uninstall -c ./examples/example.csv
+    `python3 iox_benja.py -m uninstall -c ./examples/example.csv`
 
 **Start client**
-    python3 iox_benja.py -m start -c ./examples/example.csv
+    `python3 iox_benja.py -m start -c ./examples/example.csv`
 
 **Stop client**
-    python3 iox_benja.py -m stop -c ./examples/example.csv
+    `python3 iox_benja.py -m stop -c ./examples/example.csv`
 
 **Status client**
-    python3 iox_benja.py -m status -c ./examples/example.csv
+    `python3 iox_benja.py -m status -c ./examples/example.csv`
 
 **List apps**
-    python3 iox_benja.py -m list -c ./examples/example.csv
+    `python3 iox_benja.py -m list -c ./examples/example.csv`
 ---
 Author: Oliver Pan, 2022
