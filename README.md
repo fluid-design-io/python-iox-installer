@@ -113,6 +113,10 @@ There are two modes it can run:
 
     python iox_benja.py -c ./examples/iox_install.csv -m profiles
 
+
+https://user-images.githubusercontent.com/13263720/173143602-21cdb3c4-279f-4ecd-be3d-919834ae0fca.mp4
+
+
 ---
 
 License: MIT
