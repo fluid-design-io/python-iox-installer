@@ -17,11 +17,11 @@ def gen_ini(server_ip):
         f.write("server_ip: " + server_ip + "\n")
         f.write("server_port1: 9302\n")
         f.write("server_port2: 9303\n")
-        f.write("mode: TWR\n")
+        f.write("mode: TDOA\n")
         f.write("debug: 0\n")
     # return the name of the file
     return f.name
-# delete .ini file
 
+# delete .ini file
 def del_ini(server_ip):
     os.remove(f".\\package_config_{server_ip}.ini")

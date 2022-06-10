@@ -1,3 +1,4 @@
+import io
 import os
 import time
 import subprocess
@@ -20,12 +21,10 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 # A function to print colored text using bcolors class, takes in a string and a color from the bcolors class.
-
-
 def color_text(text, color):
     print(color + text + bcolors.ENDC)
 
-
+# A function to get current working directory. Returns the path as a string.
 def get_cwd(path='ioxclient'):
     cwd = os.getcwd()
     if path:
@@ -34,11 +33,32 @@ def get_cwd(path='ioxclient'):
     # check if is mac or windows
     if os.name == 'nt':
         cwd = cwd.replace(" ", "\\ ")
+    else:
+        cwd = cwd.replace(" ", "\ ")
     return cwd
-# A function make this command used many times: subprocess.Popen(f'.\\ioxclient.exe --profile {ap_profile} app install iox_benja .\\{ap_image_path}', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
 
 def run_terminal(cmd):
     ps = subprocess.Popen(cmd, shell=True,
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     return ps
+
+def read_as_utf8(fileno):
+    fp = io.open(fileno, mode="r", encoding="utf-8", closefd=False)
+    print(fp.read())
+    fp.close()
+    
+def versiontuple(v):
+    return tuple(map(int, (v.split("."))))
+
+def get_iox_version():
+    ps = run_terminal(f'{get_cwd()} --version')
+    ps_ver = ps.communicate()[0].decode()
+    
+    ps_ver = ps_ver.split('\n')
+    ps_ver = ps_ver[0].split(' ')
+    ps_ver = ps_ver[2]
+    
+    return ps_ver
+    
+    
+    

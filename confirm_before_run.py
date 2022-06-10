@@ -38,5 +38,7 @@ def confirm_before_run():
             f"Are you sure you want to {args.mode} Iox client software?")
     if args.mode == "delete":
         return confirm_input(f"Are you sure you want to delete profile(s)")
+    if args.mode == "init":
+        return confirm_input(f"Note: this is only used the first time you run the program. Are you sure you want to initialize the program?")
     if args.mode == "status" or args.mode == "list" or args.mode == "profiles":
         return True

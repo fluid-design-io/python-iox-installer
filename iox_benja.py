@@ -17,7 +17,6 @@ from generate_ini import *
 from confirm_before_run import *
 from util import *
 from iox_tools import *
-
 # A function to get current working directory.
 
 introduction = """
@@ -37,6 +36,7 @@ def main():
     ap_password = args.password
     ap_image_path = args.image
     ap_activation = args.activation
+    server_ip = args.server
     install_mode = args.mode
     install_type = None
     if csv_path is None and ap_profile is not None and ap_ip is not None and ap_username is not None and ap_password is not None:
@@ -55,6 +55,8 @@ def main():
 
     if install_mode == "delete":  # delete iox profile
         delete_iox_profile(install_type, csv_path, ap_profile)
+    if install_mode == "init":  # initialize the program
+        init_iox()
     if install_mode == "create":
         color_text("Exiting program...", bcolors.OKCYAN)
         return
@@ -67,7 +69,8 @@ def main():
         if install_type == "single":
             color_text("Installing Iox client software...", bcolors.OKGREEN)
             print(f'Generating file package_config_{ap_ip}.ini...\n')
-            start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation)
+            start_iox_install(ap_profile, ap_ip, ap_image_path,
+                              ap_activation, server_ip)
         else:
             if csv_path is None:
                 csv_path = "iox_install.csv"
@@ -77,7 +80,7 @@ def main():
                     color_text("Installing Iox client software...\n",
                                bcolors.OKGREEN)
                     executor.map(
-                        start_iox_install, df['profile'], df['ip'], df['image'], df['activation'])
+                        start_iox_install, df['profile'], df['ip'], df['image'], df['activation'], df['server'])
                 elif install_mode == "uninstall":  # perform iox uninstallation
                     color_text("Uninstalling Iox...\n", bcolors.OKCYAN)
                     executor.map(uninstall_iox, df['profile'])

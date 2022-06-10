@@ -9,6 +9,8 @@ from yaspin.spinners import Spinners
 
 def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password):
     program_path = get_cwd()
+    iox_version =  get_iox_version() # A fix for version incompatibility
+    
     with yaspin(Spinners.moon, text=f"Creating profile: {ap_profile}") as sp:
         ps = run_terminal(f'{program_path} profiles create')
 
@@ -25,7 +27,8 @@ def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password):
         execute_command(ps, "\n")
         execute_command(ps, '\n')  # Connection Timeout Millisecond [1000]
         execute_command(ps, "\n")  # URL scheme [https]
-        execute_command(ps, "\n")  # API Prefix[/iox/api/v2/hosting]
+        if versiontuple(iox_version) >= versiontuple("1.16.0.0"): # Only execute this command if the version is >= 1.16.0.0
+            execute_command(ps, "\n")  # API Prefix[/iox/api/v2/hosting]
         execute_command(ps, "22\n")  # IOx platform's SSH port [2222]: 22
         sp.text = f"Creating profile: 22"
         execute_command(ps, "\n")  # RSA key, in PEM format
@@ -63,12 +66,12 @@ def delete_iox_profile(install_type, csv_path, ap_profile):
         # print(f"\n🚀{ap_profile} profile deleted🚀\n")
 
 
-def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation):
+def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip):
     program_path = get_cwd()
     with yaspin(Spinners.moon, text=f"Generating package_config.ini") as sp:
         # color_text(
         #     f"Generating package_config.ini for {ap_profile}", bcolors.OKGREEN)
-        config_ini_name = gen_ini(ap_ip)
+        config_ini_name = gen_ini(server_ip)
 
         # color_text(
         #     f"Installing Iox client software for {ap_profile}", bcolors.OKGREEN)
@@ -104,7 +107,7 @@ def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation):
         start_iox_app(ap_profile)
         check_iox_status(ap_profile)
         # remove the generated ini file
-        del_ini(ap_ip)
+        del_ini(server_ip)
 
 
 def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_password):
@@ -120,10 +123,10 @@ def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_passwor
             create_iox_profile(row['profile'], row['ip'],
                                row['username'], row['password'])
         color_text(
-            f"Installing Iox client software for {len(df)} devices", bcolors.OKGREEN)
+            f"Added {len(df)} profiles", bcolors.OKGREEN)
         # print out the names of the profiles created.
-        for index, row in df.iterrows():
-            print(row['profile'], row['ip'])
+        # for index, row in df.iterrows():
+        #     print(row['profile'], row['ip'])
 
 
 def start_iox_app(ap_profile):
@@ -264,3 +267,17 @@ def show_profiles():
         if "Host IP:" in line:
             color_text(f"IP:   {line[11:]}", bcolors.ENDC)
             print("-" * 40)
+
+
+def init_iox():
+    program_path = get_cwd()
+    color_text(program_path, bcolors.WARNING)
+    ps_init = run_terminal(
+        [f'{program_path} profiles create'])
+    read_as_utf8(ps_init.stdout.fileno())
+    pipe_r, pipe_w = os.pipe()
+    os.write(pipe_w, "Lorem ipsum.".encode("utf-8"))
+    os.close(pipe_w)
+    read_as_utf8(pipe_r)  # prints "Lorem ipsum."
+    os.close(pipe_r)
+    color_text(f'{ps_init.communicate[0].decode()}', bcolors.OKGREEN)

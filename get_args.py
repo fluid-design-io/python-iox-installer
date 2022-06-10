@@ -18,8 +18,10 @@ def get_args():
                         help="A .tar file containing the Iox client software")
     parser.add_argument("-a", "--activation", required=False, default="activation.json",
                         help="A json file containing the activation key")
+    parser.add_argument("-s", "--server", required=False,
+                        help="The ip address of the server, used when generating package_config.ini")
     parser.add_argument("-m", "--mode", required=False, default="full",
-                        choices=["full", "create", "install", "status", "start", "stop", "uninstall", "list", "delete", "profiles"],   help="""
+                        choices=["full", "create", "install", "status", "start", "stop", "uninstall", "list", "delete", "profiles", "init"],   help="""
                         The mode of the program.
                         full: create profile, install, start the client. SSH to the AP and enable USB.
                         create: create profile.
@@ -31,6 +33,7 @@ def get_args():
                         list: list all the apps and states installed on the client.
                         delete: delete the profile.
                         profiles: list all the profiles.
+                        init: initialize the program. skip the day0 dialog with empty info.
                         """)
     args = parser.parse_args()
     return args
