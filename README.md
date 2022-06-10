@@ -29,9 +29,13 @@ Make sure you have the `package_benja.tar` file in the same directory as this pr
 
 # Usage
 
-    python3 iox_benja.py # variables...
+    python iox_benja.py # variables...
 
     # Run the program with the --help flag to see the usage
+
+# Issues
+
+Currently you have to manually go through the day0 configuration when ioxclient is installed. Otherwise the program cannot create the profiles.
 
 # Commands
 
@@ -51,6 +55,7 @@ There are two modes it can run:
     - `-pass`, `--password`: required= False,The password of the profile
     - `-i`, `--image`: required=False,A .tar file containing the Iox client software
     - `-a`, `--activation`: required=False,A json file containing the activation key
+    - `-s`, `--server`: required=False,The ip address of the server, used when generating package_config.ini
     - `-m`, `--mode`: required=False, choices=[`full`, `create`, `install`, `status`, `start`, `stop`, `uninstall`, `list`, `delete`, `profiles`], default=`full`, The mode of the program.
       - `full`: `Default`, create profile, install, start the client.
       - `create`: create profile.
@@ -70,43 +75,43 @@ There are two modes it can run:
 
 **Full install**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv
+    python iox_benja.py -c ./examples/iox_install.csv
 
 **Create profile**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m create 
+    python iox_benja.py -c ./examples/iox_install.csv -m create 
 
 **Delete profile**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m delete 
+    python iox_benja.py -c ./examples/iox_install.csv -m delete 
 
 **Install client**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m install 
+    python iox_benja.py -c ./examples/iox_install.csv -m install 
 
 **Uninstall client**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m uninstall 
+    python iox_benja.py -c ./examples/iox_install.csv -m uninstall 
 
 **Start client**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m start 
+    python iox_benja.py -c ./examples/iox_install.csv -m start 
 
 **Stop client**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m stop 
+    python iox_benja.py -c ./examples/iox_install.csv -m stop 
 
 **Status client**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m status 
+    python iox_benja.py -c ./examples/iox_install.csv -m status 
 
 **List apps**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m list 
+    python iox_benja.py -c ./examples/iox_install.csv -m list 
 
 **List profiles**
 
-    python3 iox_benja.py -c ./examples/iox_install.csv -m profiles
+    python iox_benja.py -c ./examples/iox_install.csv -m profiles
 
 ---
 
