@@ -9,7 +9,8 @@ from yaspin.spinners import Spinners
 
 def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password):
     program_path = get_cwd()
-    iox_version =  get_iox_version() # A fix for version incompatibility
+    iox_version = get_iox_version()  # A fix for version incompatibility
+
     
     with yaspin(Spinners.moon, text=f"Creating profile: {ap_profile}") as sp:
         ps = run_terminal(f'{program_path} profiles create')
@@ -27,7 +28,8 @@ def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password):
         execute_command(ps, "\n")
         execute_command(ps, '\n')  # Connection Timeout Millisecond [1000]
         execute_command(ps, "\n")  # URL scheme [https]
-        if versiontuple(iox_version) >= versiontuple("1.16.0.0"): # Only execute this command if the version is >= 1.16.0.0
+        # Only execute this command if the version is >= 1.16.0.0
+        if versiontuple(iox_version) >= versiontuple("1.16.0.0"):
             execute_command(ps, "\n")  # API Prefix[/iox/api/v2/hosting]
         execute_command(ps, "22\n")  # IOx platform's SSH port [2222]: 22
         sp.text = f"Creating profile: 22"
@@ -68,46 +70,44 @@ def delete_iox_profile(install_type, csv_path, ap_profile):
 
 def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip):
     program_path = get_cwd()
-    with yaspin(Spinners.moon, text=f"Generating package_config.ini") as sp:
-        # color_text(
-        #     f"Generating package_config.ini for {ap_profile}", bcolors.OKGREEN)
-        config_ini_name = gen_ini(server_ip)
+    app_state = check_iox_status(ap_profile, False)
+    if app_state == "RUNNING":
+        color_text(f"{ap_profile}: Iox client software is already running", bcolors.OKGREEN)
+        return
+    else:
+        with yaspin(Spinners.moon, text=f"Generating package_config.ini") as sp:
 
-        # color_text(
-        #     f"Installing Iox client software for {ap_profile}", bcolors.OKGREEN)
-        sp.text = f"Installing Iox client software"
-        ps_install = run_terminal(
-            f'{program_path} --profile {ap_profile} app install iox_benja {ap_image_path}')
+            config_ini_name = gen_ini(ap_ip, server_ip)
 
-        ps_install.communicate()[0].decode()
+            sp.text = f"Installing Iox client software"
+            ps_install = run_terminal(
+                f'{program_path} --profile {ap_profile} app install iox_benja {ap_image_path}')
 
-        # color_text(
-        #     f"Activating Iox client software for {ap_profile}", bcolors.OKGREEN)
-        sp.text = f"Activating Iox client software"
-        ps_activation = run_terminal(
-            f'{program_path} --profile {ap_profile} app activate iox_benja --payload {ap_activation}')
-        ps_activation.communicate()[0].decode()
+            ps_install.communicate()[0].decode()
 
-        # color_text(
-        #     f"Setting package_config.ini for {ap_profile}", bcolors.OKGREEN)
-        # Change the spinner to a list of gear emojis
-        sp.spinner = Spinners.simpleDotsScrolling
-        sp.text = f"Setting package_config.ini"
-        ps_config = run_terminal(
-            f'{program_path} --profile {ap_profile} app setconfig iox_benja {config_ini_name}')
-        config_res = ps_config.communicate()[0].decode()
-        if "Error" in config_res:
-            color_text(
-                f"{ap_profile}: Error while setting package_config.ini", bcolors.FAIL)
-            print(config_res)
-        # color_text(
-        #     f"Starting Iox client software for {ap_profile}", bcolors.OKGREEN)
+            sp.spinner = Spinners.simpleDotsScrolling
 
-        sp.text = f"Starting Iox client software"
-        start_iox_app(ap_profile)
-        check_iox_status(ap_profile)
-        # remove the generated ini file
-        del_ini(server_ip)
+            sp.text = f"Activating Iox client software"
+            ps_activation = run_terminal(
+                f'{program_path} --profile {ap_profile} app activate iox_benja --payload {ap_activation}')
+            ps_activation.communicate()[0].decode()
+
+            sp.text = f"Setting package_config.ini"
+            ps_config = run_terminal(
+                f'{program_path} --profile {ap_profile} app setconfig iox_benja {config_ini_name}')
+            config_res = ps_config.communicate()[0].decode()
+            if "Error" in config_res:
+                color_text(
+                    f"{ap_profile}: Error while setting package_config.ini", bcolors.FAIL)
+                print(config_res)
+            # color_text(
+            #     f"Starting Iox client software for {ap_profile}", bcolors.OKGREEN)
+
+            sp.text = f"Starting Iox client software"
+            start_iox_app(ap_profile)
+            check_iox_status(ap_profile)
+            # remove the generated ini file
+            del_ini(ap_ip, server_ip)
 
 
 def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_password):

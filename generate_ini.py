@@ -5,13 +5,14 @@
 # server_ip: 192.168.100.30
 # server_port1: 9302
 # server_port2: 9303
-# mode: TWR
+# mode: TDOA
 # debug: 0
 
 import os
 
-def gen_ini(server_ip):
-    with open(f".\\package_config_{server_ip}.ini", "w") as f:
+
+def gen_ini(ap_ip, server_ip):
+    with open(f".\\package_config_{ap_ip}_{server_ip}.ini", "w") as f:
         f.write("[benja_config]\n")
         f.write("serial_dev: /dev/ttyUSB0\n")
         f.write("server_ip: " + server_ip + "\n")
@@ -23,5 +24,7 @@ def gen_ini(server_ip):
     return f.name
 
 # delete .ini file
-def del_ini(server_ip):
-    os.remove(f".\\package_config_{server_ip}.ini")
+
+
+def del_ini(ap_ip, server_ip):
+    os.remove(f".\\package_config_{ap_ip}_{server_ip}.ini")
