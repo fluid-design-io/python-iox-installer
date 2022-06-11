@@ -52,7 +52,7 @@ def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password, debug_enable
 def delete_iox_profile(install_type, csv_path, ap_profile):
     program_path = get_cwd()
     if install_type == "single":
-        ps = run_terminal(f'{program_path} profiles delete {row["profile"]}')
+        ps = run_terminal(f'{program_path} profiles delete {ap_profile}')
         ps.communicate()[0].decode()
         color_text(f"{ap_profile}: Profile deleted", bcolors.OKGREEN)
     else:

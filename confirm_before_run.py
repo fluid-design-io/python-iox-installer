@@ -19,23 +19,40 @@ def confirm_input(message):
 
 def confirm_before_run():
     args = get_args()
+    install_mode = args.mode
     # if csv is not provided, the program will use the rest of the variables.
     if args.csv is None and args.profile is not None and args.ip is not None and args.username is not None and args.password is not None:
-        color_text(
-            "This feature is not yet implemented. Exiting program...", bcolors.OKCYAN)
-        return False
+        if install_mode == "create":
+            # check if variables for install mode is provided
+            if args.image is None or args.activation is None or args.server is None:
+                return color_text(
+                    "Please provide all the necessary variables for the full installation.", bcolors.FAIL)
+
+            else:
+                # confirm before running the program
+                return confirm_input(f"Are you sure you want to {args.mode} {args.profile}?")
+        if install_mode == "delete":
+            # check if all the variables are provided
+            if args.profile is None:
+                color_text(
+                    "Please provide the profile name to be deleted.", bcolors.FAIL)
+                return
+            else:
+                return confirm_input(f"Are you sure you want to delete {args.profile} profile?")
     else:
         csv = "iox_install.csv" if args.csv is None else args.csv
-    if args.mode == "full" or args.mode == "create":
+        color_text(
+            f"\n🚀Running Iox client software for {csv}🚀\n", bcolors.HEADER)
+    if install_mode == "full" or install_mode == "create":
         # confirm before running, if user enter "n" or "N", exit the program
-        m = "full install" if args.mode == "full" else "create profile"
+        m = "full install" if install_mode == "full" else "create profile"
         return confirm_input(f'Are you sure you want to {m} Iox client software?')
-    if args.mode == "install" or args.mode == "uninstall" or args.mode == "start" or args.mode == "stop":
+    if install_mode == "install" or install_mode == "uninstall" or install_mode == "start" or install_mode == "stop":
         return confirm_input(
-            f"Are you sure you want to {args.mode} Iox client software?")
-    if args.mode == "delete":
+            f"Are you sure you want to {install_mode} Iox client software?")
+    if install_mode == "delete":
         return confirm_input(f"Are you sure you want to delete profile(s)")
-    if args.mode == "init":
+    if install_mode == "init":
         return confirm_input(f"Note: this is only used the first time you run the program. Are you sure you want to initialize the program?")
-    if args.mode == "status" or args.mode == "list" or args.mode == "profiles":
+    if install_mode == "status" or install_mode == "list" or install_mode == "profiles":
         return True

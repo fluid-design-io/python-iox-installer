@@ -68,6 +68,7 @@ def main():
 
     if install_mode == "delete":  # delete iox profile
         delete_iox_profile(install_type, csv_path, ap_profile)
+        return
     if install_mode == "init":  # initialize the program
         init_iox()
     if install_mode == "create":
@@ -80,10 +81,24 @@ def main():
     # MAIN PROGRAM
     else:
         if install_type == "single":
-            color_text("Installing Iox client software...", bcolors.OKGREEN)
-            print(f'Generating file package_config_{ap_ip}.ini...\n')
-            start_iox_install(ap_profile, ap_ip, ap_image_path,
-                              ap_activation, server_ip)
+            if install_mode == "install":
+                color_text("Installing Iox client software...",
+                           bcolors.OKGREEN)
+                print(f'Generating file package_config_{ap_ip}.ini...\n')
+                start_iox_install(ap_profile, ap_ip, ap_image_path,
+                                  ap_activation, server_ip)
+            elif install_mode == "uninstall":
+                uninstall_iox(ap_profile)
+            elif install_mode == "status":
+                check_iox_status(ap_profile)
+            elif install_mode == "list":
+                check_iox_list(ap_profile)
+            elif install_mode == "start":
+                start_iox_app(ap_profile)
+            elif install_mode == "stop":
+                stop_iox_app(ap_profile)
+            elif install_mode == "profiles":
+                show_profiles()
         else:
             if csv_path is None:
                 csv_path = "iox_install.csv"
