@@ -23,6 +23,15 @@ class bcolors:
 # A function to print colored text using bcolors class, takes in a string and a color from the bcolors class.
 def color_text(text, color):
     print(color + text + bcolors.ENDC)
+    
+def debug_print(text,enabled=False,ps=None):
+    if enabled:
+        if ps is not None:
+            # ps.stdin.write(text.encode())
+            print(text)
+        else:
+            color_text(text, bcolors.HEADER)
+    
 
 # A function to get current working directory. Returns the path as a string.
 def get_cwd(path='ioxclient'):
@@ -57,6 +66,9 @@ def get_iox_version():
     ps_ver = ps_ver.split('\n')
     ps_ver = ps_ver[0].split(' ')
     ps_ver = ps_ver[2]
+    
+    if ps_ver == "not":
+        ps_ver = "0.0.0"
     
     return ps_ver
     

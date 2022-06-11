@@ -1,3 +1,4 @@
+import subprocess
 from generate_ini import *
 from confirm_before_run import *
 from util import *
@@ -7,14 +8,14 @@ from yaspin import yaspin
 from yaspin.spinners import Spinners
 
 
-def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password):
+def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password, debug_enabled=False):
     program_path = get_cwd()
     iox_version = get_iox_version()  # A fix for version incompatibility
-
-    
+    debug_print(f"iox_version: {iox_version}", debug_enabled)   
+        
     with yaspin(Spinners.moon, text=f"Creating profile: {ap_profile}") as sp:
         ps = run_terminal(f'{program_path} profiles create')
-
+        debug_print(f"Creating profile", debug_enabled, ps)
         execute_command(ps, ap_profile + "\n", sleep=0.3)  # profile name
         sp.text = f"Creating profile: {ap_profile}"
         execute_command(ps, ap_ip + "\n")  # ip address
@@ -36,6 +37,8 @@ def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password):
         execute_command(ps, "\n")  # RSA key, in PEM format
         execute_command(ps, "\n")  # x.509 certificate, in PEM format
         create_res = ps.communicate()[0].decode()
+        debug_print(
+            f"Closing communication", debug_enabled, create_res)
         if "Error" in create_res:
             sp.text = f"Creating profile: {ap_profile}"
             sp.fail = f"{ap_profile}: Error while creating profile"
@@ -72,7 +75,8 @@ def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip
     program_path = get_cwd()
     app_state = check_iox_status(ap_profile, False)
     if app_state == "RUNNING":
-        color_text(f"{ap_profile}: Iox client software is already running", bcolors.OKGREEN)
+        color_text(
+            f"{ap_profile}: Iox client software is already running", bcolors.OKGREEN)
         return
     else:
         with yaspin(Spinners.moon, text=f"Generating package_config.ini") as sp:
@@ -110,18 +114,21 @@ def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip
             del_ini(ap_ip, server_ip)
 
 
-def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_password):
+def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_password, debug_enabled):
     if mode == "single":
         create_iox_profile(ap_profile, ap_ip, ap_username, ap_password)
     else:
         if csv_path is None:
             csv_path = "iox_install.csv"
+            debug_print(f"csv_path is not provided, using default: {csv_path}")
         df = read_csv(csv_path)
+        debug_print("csv file read")
+        debug_print(f"{len(df)} profiles found")
         # loop through the csv file and create profiles
         color_text(f"Creating profiles for {len(df)} devices", bcolors.OKGREEN)
         for index, row in df.iterrows():
             create_iox_profile(row['profile'], row['ip'],
-                               row['username'], row['password'])
+                               row['username'], row['password'], debug_enabled)
         color_text(
             f"Added {len(df)} profiles", bcolors.OKGREEN)
         # print out the names of the profiles created.

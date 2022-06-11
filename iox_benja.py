@@ -12,6 +12,7 @@
 
 import time
 import concurrent.futures as cf
+import subprocess
 from read_csv import read_csv
 from generate_ini import *
 from confirm_before_run import *
@@ -28,7 +29,7 @@ This program is an automated installer for the Cisco Iox client software.
 
 def main():
     args = get_args()
-    cwd = get_cwd()
+    program_path = get_cwd()
     csv_path = args.csv
     ap_profile = args.profile
     ap_ip = args.ip
@@ -38,6 +39,7 @@ def main():
     ap_activation = args.activation
     server_ip = args.server
     install_mode = args.mode
+    debug_enabled = args.debug
     install_type = None
     if csv_path is None and ap_profile is not None and ap_ip is not None and ap_username is not None and ap_password is not None:
         install_type = "single"
@@ -45,13 +47,24 @@ def main():
         install_type = "csv"
     # introduction
     print(introduction)
+    iox_version = get_iox_version()
+    if iox_version == "0.0.0":
+        debug_print(
+            "Iox version is not detected, possibly in the init state or incompatible version", debug_enabled)
+        debug_print("Trying init config...", debug_enabled)
+        color_text(
+            f"Please complete the initialization dialog in the Iox client software.", bcolors.WARNING)
+        color_text("You can skip the dialog by pressing 'Enter'",
+                   bcolors.OKCYAN)
+        subprocess.call(f"{program_path} profiles list", shell=True)
 
+    debug_print("install_type: " + install_type, debug_enabled)
     # If the csv file is not provided, the program will use the rest of the variables.
     # Else, the program will use the variables from the csv file.
     # Perform profile creatino if install_mode is "full" or "create"
     if install_mode == "full" or install_mode == "create":
         start_iox_profile(install_type, csv_path, ap_profile,
-                          ap_ip, ap_username, ap_password)
+                          ap_ip, ap_username, ap_password, debug_enabled)
 
     if install_mode == "delete":  # delete iox profile
         delete_iox_profile(install_type, csv_path, ap_profile)

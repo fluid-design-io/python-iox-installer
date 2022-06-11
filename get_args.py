@@ -35,5 +35,7 @@ def get_args():
                         profiles: list all the profiles.
                         init: initialize the program. skip the day0 dialog with empty info.
                         """)
+    parser.add_argument("-d", "--debug", required=False,
+                        action="store_true", help="Debug mode")
     args = parser.parse_args()
     return args
