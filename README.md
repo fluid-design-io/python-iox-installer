@@ -19,8 +19,7 @@ This program is an automated installer for the Cisco Iox client software.
 # Requirements
 
     # Reqires Python 3.6+
-    pip install pandas
-    pip install --upgrade yaspin
+    pip install -r requirements.txt
 
 Download ioxclient from [here](https://developer.cisco.com/docs/iox/#!iox-resource-downloads)
 Then unzip the file and move it to the same directory as this program, make sure the 'ioxclient' is inside the directory
@@ -53,6 +52,7 @@ There are two modes it can run:
     - `-ip` `--ip`: required= False,The ip address of the profile
     - `-u`, `--username`: required=False,The username of the profile
     - `-pass`, `--password`: required= False,The password of the profile
+    - `-s`, `--secret`: The enable secret of the profile
     - `-i`, `--image`: required=False,A .tar file containing the Iox client software
     - `-a`, `--activation`: required=False,A json file containing the activation key
     - `-s`, `--server`: required=False,The ip address of the server, used when generating package_config.ini
