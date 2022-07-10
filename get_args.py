@@ -13,12 +13,14 @@ def get_args():
     parser.add_argument("-u", "--username", required=False, default="admin",
                         help="The username of the profile")
     parser.add_argument("-pass", "--password", required=False,
-                        help="The password of the profile")
+                        help="The password of the profile"),
+    parser.add_argument("-s", "--secret", required=False,
+                        help="The enable secret of the profile"),
     parser.add_argument("-i", "--image", required=False,
                         help="A .tar file containing the Iox client software")
     parser.add_argument("-a", "--activation", required=False, default="activation.json",
                         help="A json file containing the activation key")
-    parser.add_argument("-s", "--server", required=False,
+    parser.add_argument("-S", "--server", required=False,
                         help="The ip address of the server, used when generating package_config.ini")
     parser.add_argument("-m", "--mode", required=False, default="full",
                         choices=["full", "create", "install", "status", "start", "stop", "uninstall", "list", "delete", "profiles", "init"],   help="""

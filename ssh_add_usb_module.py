@@ -1,5 +1,4 @@
 from netmiko import ConnectHandler
-from read_csv import read_csv
 
 from util import debug_print
 

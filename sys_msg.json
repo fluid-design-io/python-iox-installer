@@ -1,0 +1,9 @@
+{
+    "setting_package": "Error while setting package_config.ini. Please make sure that ssh is enabled and that you have the correct permissions.",
+    "version_not_found": "Fatal error: unable to check iox version, please check if you can run iox app first.",
+    "no_usb_found": "Please make sure the USB device is plugged in.",
+    "attempt_ssh_usb": "Attempting to connect SSH to enable usb module",
+    "ap_state_unkown": "is in an unkown state, make sure you have correct profiles added to iox_client.conf",
+    "profile_not_installed": "is not installed, no need to uninstall",
+    "iox_already_running": "Iox client software is already running"
+}

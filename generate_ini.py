@@ -9,10 +9,16 @@
 # debug: 0
 
 import os
-
+def getPath():
+    path = ""
+    if os.name == 'nt':
+        path = ".\\"
+    else:
+        path = "./"
+    return path
 
 def gen_ini(ap_ip, server_ip):
-    with open(f".\\package_config_{ap_ip}_{server_ip}.ini", "w") as f:
+    with open(f"{getPath()}package_config_{ap_ip}_{server_ip}.ini", "w") as f:
         f.write("[benja_config]\n")
         f.write("serial_dev: /dev/ttyUSB0\n")
         f.write("server_ip: " + server_ip + "\n")
@@ -27,4 +33,4 @@ def gen_ini(ap_ip, server_ip):
 
 
 def del_ini(ap_ip, server_ip):
-    os.remove(f".\\package_config_{ap_ip}_{server_ip}.ini")
+    os.remove(f"{getPath()}package_config_{ap_ip}_{server_ip}.ini")

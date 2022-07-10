@@ -5,6 +5,7 @@
 #  - ap_ip: the ip address of the profile
 #  - ap_username: the username of the profile
 #  - ap_password: the password of the profile
+#  - ap_secret: the secret of the profile
 #  - ap_image_path: a .tar file containing the Iox client software
 #  - ap_activation: a json file containing the activation key
 # The program reads these variables from an excel or csv file.
@@ -35,13 +36,14 @@ def main():
     ap_ip = args.ip
     ap_username = args.username
     ap_password = args.password
+    ap_secret = args.secret
     ap_image_path = args.image
     ap_activation = args.activation
     server_ip = args.server
     install_mode = args.mode
     debug_enabled = args.debug
     install_type = None
-    if csv_path is None and ap_profile is not None and ap_ip is not None and ap_username is not None and ap_password is not None:
+    if csv_path is None and ap_profile is not None and ap_ip is not None and ap_username is not None and ap_password is not None and ap_secret is not None:
         install_type = "single"
     else:
         install_type = "csv"
@@ -94,7 +96,8 @@ def main():
             elif install_mode == "list":
                 check_iox_list(ap_profile)
             elif install_mode == "start":
-                start_iox_app(ap_profile)
+                start_iox_app(ap_profile, csv_path, ap_ip, ap_username,
+                              ap_password, ap_secret, debug_enabled)
             elif install_mode == "stop":
                 stop_iox_app(ap_profile)
             elif install_mode == "profiles":
@@ -123,7 +126,8 @@ def main():
                 elif install_mode == "start":  # start iox app
                     color_text("Starting Iox client software...\n",
                                bcolors.OKGREEN)
-                    executor.map(start_iox_app, df['profile'])
+                    executor.map(
+                        start_iox_app, df['profile'], csv_path, df['ip'], df['username'], df['password'], df['secret'], [debug_enabled] * len(df))
                 elif install_mode == "stop":  # start iox app
                     color_text("Stoping Iox client software...\n",
                                bcolors.OKGREEN)

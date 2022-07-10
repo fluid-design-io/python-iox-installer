@@ -55,7 +55,7 @@ There are two modes it can run:
     - `-s`, `--secret`: The enable secret of the profile
     - `-i`, `--image`: required=False,A .tar file containing the Iox client software
     - `-a`, `--activation`: required=False,A json file containing the activation key
-    - `-s`, `--server`: required=False,The ip address of the server, used when generating package_config.ini
+    - `-S`, `--server`: required=False,The ip address of the server, used when generating package_config.ini
     - `-m`, `--mode`: required=False, choices=[`full`, `create`, `install`, `status`, `start`, `stop`, `uninstall`, `list`, `delete`, `profiles`], default=`full`, The mode of the program.
       - `full`: `Default`, create profile, install, start the client.
       - `create`: create profile.

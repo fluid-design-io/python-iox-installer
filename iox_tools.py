@@ -1,5 +1,6 @@
 from generate_ini import *
 from confirm_before_run import *
+from ssh_add_usb_module import ssh_add_usb_module
 from util import *
 from iox_tools import *
 from read_csv import read_csv
@@ -10,8 +11,8 @@ from yaspin.spinners import Spinners
 def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password, debug_enabled=False):
     program_path = get_cwd()
     iox_version = get_iox_version()  # A fix for version incompatibility
-    debug_print(f"iox_version: {iox_version}", debug_enabled)   
-        
+    debug_print(f"iox_version: {iox_version}", debug_enabled)
+
     with yaspin(Spinners.moon, text=f"Creating profile: {ap_profile}") as sp:
         ps = run_terminal(f'{program_path} profiles create')
         debug_print(f"Creating profile", debug_enabled, ps)
@@ -28,9 +29,15 @@ def create_iox_profile(ap_profile, ap_ip, ap_username, ap_password, debug_enable
         execute_command(ps, "\n")
         execute_command(ps, '\n')  # Connection Timeout Millisecond [1000]
         execute_command(ps, "\n")  # URL scheme [https]
-        # Only execute this command if the version is >= 1.16.0.0
-        if versiontuple(iox_version) >= versiontuple("1.16.0.0"):
-            execute_command(ps, "\n")  # API Prefix[/iox/api/v2/hosting]
+        # Check for version incompatibility, if version is None, then exit the program
+        if iox_version is None:
+            color_text(
+                f"{get_sys_msg('version_not_found')}", bcolors.FAIL)
+            exit(1)
+        else:  # Only execute this command if the version is >= 1.16.0.0
+            if versiontuple(iox_version) >= versiontuple("1.16.0.0"):
+                print(f"versiontuple: {iox_version}")
+                execute_command(ps, "\n")  # API Prefix[/iox/api/v2/hosting]
         execute_command(ps, "22\n")  # IOx platform's SSH port [2222]: 22
         sp.text = f"Creating profile: 22"
         execute_command(ps, "\n")  # RSA key, in PEM format
@@ -75,7 +82,7 @@ def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip
     app_state = check_iox_status(ap_profile, False)
     if app_state == "RUNNING":
         color_text(
-            f"{ap_profile}: Iox client software is already running", bcolors.OKGREEN)
+            f"{ap_profile}: {get_sys_msg('iox_already_running')}", bcolors.OKGREEN)
         return
     else:
         with yaspin(Spinners.moon, text=f"Generating package_config.ini") as sp:
@@ -100,8 +107,9 @@ def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip
                 f'{program_path} --profile {ap_profile} app setconfig iox_benja {config_ini_name}')
             config_res = ps_config.communicate()[0].decode()
             if "Error" in config_res:
+                err_msg = get_sys_msg("setting_package")
                 color_text(
-                    f"{ap_profile}: Error while setting package_config.ini", bcolors.FAIL)
+                    f"\n{ap_profile}: {err_msg}", bcolors.FAIL)
                 print(config_res)
             # color_text(
             #     f"Starting Iox client software for {ap_profile}", bcolors.OKGREEN)
@@ -119,10 +127,11 @@ def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_passwor
     else:
         if csv_path is None:
             csv_path = "iox_install.csv"
-            debug_print(f"csv_path is not provided, using default: {csv_path}")
+            debug_print(
+                f"csv_path is not provided, using default: {csv_path}", debug_enabled)
         df = read_csv(csv_path)
-        debug_print("csv file read")
-        debug_print(f"{len(df)} profiles found")
+        debug_print("csv file read", debug_enabled)
+        debug_print(f"{len(df)} profiles found", debug_enabled)
         # loop through the csv file and create profiles
         color_text(f"Creating profiles for {len(df)} devices", bcolors.OKGREEN)
         for index, row in df.iterrows():
@@ -135,11 +144,31 @@ def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_passwor
         #     print(row['profile'], row['ip'])
 
 
-def start_iox_app(ap_profile):
+def start_iox_app(ap_profile, csv_path, ap_ip, ap_username, ap_password, ap_secret, debug_enabled):
+    def check_res_has_error(res):
+        for line in res:
+            if "Error:" in line:
+                color_text(f"{ap_profile}: Error", bcolors.FAIL)
+            if "description" in line:
+                if "/dev/ttyUSB0" in line:
+                    color_text(
+                        f"{ap_profile}: {get_sys_msg('no_usb_found')}", bcolors.FAIL)
+                    return True
+                break
+        return False
+
     program_path = get_cwd()
-    ps_start = run_terminal(
-        f'{program_path} --profile {ap_profile} app start iox_benja')
-    res = ps_start.communicate()[0].decode()
+    app_state = check_iox_status(ap_profile, False)
+
+    if app_state == "RUNNING":
+        color_text(
+            f"{ap_profile}: {get_sys_msg('iox_already_running')}", bcolors.OKGREEN)
+        return
+    else:
+        ps_start = run_terminal(
+            f'{program_path} --profile {ap_profile} app start iox_benja')
+        res = ps_start.communicate()[0].decode()
+        debug_print(f"{ap_profile}: {res}", debug_enabled)
     # res looks like this:
     # Error occured,
     # Currently active profile :  AP-9120-01
@@ -153,14 +182,16 @@ def start_iox_app(ap_profile):
 
     # If Error. then print the error message
     res = res.split("\n")
-    for line in res:
-        if "Error:" in line:
-            color_text(f"{ap_profile}: Error", bcolors.FAIL)
-        if "description" in line:
-            if "/dev/ttyUSB0" in line:
-                color_text(
-                    f"{ap_profile}: Please make sure the USB device is plugged in.", bcolors.FAIL)
-            break
+    if check_res_has_error(res):
+        debug_print(
+            f"{ap_profile}: {get_sys_msg('attemp_ssh_usb')}", debug_enabled)
+        ssh_add_usb_module(ap_ip, ap_username, ap_password,
+                           ap_secret, debug_enabled)
+        debug_print(f"{ap_profile}: Rerunning the command", debug_enabled)
+        ps_start = run_terminal(
+            f'{program_path} --profile {ap_profile} app start iox_benja')
+        res = ps_start.communicate()[0].decode()
+        debug_print(f"{ap_profile}: {res}", debug_enabled)
 
 
 def stop_iox_app(ap_profile):
@@ -200,7 +231,7 @@ def check_iox_status(ap_profile, show_output=True):
                        bcolors.BOLD) if show_output else None
             return "NOT FOUND"
     color_text(
-        f"{ap_profile} is in an unkown state, make sure you have correct profiles added to iox_client", bcolors.FAIL) if show_output else None
+        f"{ap_profile} {get_sys_msg('ap_state_unkown')}", bcolors.FAIL) if show_output else None
     return "ERROR"
 
 
@@ -245,7 +276,7 @@ def uninstall_iox(ap_profile):
             f'{program_path} --profile {ap_profile} application stop iox_benja && ioxclient --profile {ap_profile} application deactivate iox_benja && ioxclient --profile {ap_profile} application uninstall iox_benja')
     elif app_state == "NOT FOUND":
         color_text(
-            f"{ap_profile} is not installed, no need to uninstall", bcolors.BOLD)
+            f"{ap_profile} {get_sys_msg('iox_not_installed')}", bcolors.BOLD)
         return
     else:
         ps_uninstall = run_terminal(
