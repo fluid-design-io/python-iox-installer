@@ -8,15 +8,15 @@ This program is an automated installer for the Cisco Iox client software.
 
 # Features
 
-- 🗄 Import a list of Iox devices from a CSV file
-- 👥 Create/delete multiple iox profiles
-- 📦 Install multiple Iox clients
-- 💡 SSH support for enable AP configurations
-- 🔧 Generate package_config.ini file automatically based on profile ip
-- ✅ Check AP status and list of installed apps
-- 🏎 Threading support, runs multiple ioxclient at once
-- 📄 Simplified listing status, list and profiles overhead, only showing what's important
-- 🌎 Localization support, see [🌎 Localization](#localization)
+- 🗄  Import a list of Iox devices from a CSV file
+- 👥  Create/delete multiple iox profiles
+- 📦  Install multiple Iox clients with beautiful CLI UI
+- 💡  SSH support for enable AP configurations
+- 🔧  Generate package_config.ini file automatically based on profile ip
+- ✅  Check AP status and list of installed apps
+- 🏎  Threading support, runs multiple ioxclient at once
+- 📄  Simplified listing status, list and profiles overhead, only showing what's important
+- 🌎  Localization support, see [Localization](#localization) for more information
 
 # Requirements
 
