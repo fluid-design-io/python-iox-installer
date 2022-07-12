@@ -30,11 +30,9 @@ Make sure you have the `package_benja.tar` file in the same directory as this pr
 
 # Usage
 
-    python iox_benja.py # variables...
+    python iox_benja.py [options]
 
-    # Run the program with the --help flag to see the usage
-
-Example usage: [here](#example-commands)
+Detailed example usage: [here](#example-commands)
 
 # Commands
 
@@ -42,7 +40,7 @@ There are two modes it can run:
 
 - Batch Mode _(recommend)_:
   - Runs commands from a csv file
-  - An example of csv file can be found in the `examples` dir
+  - An example of csv file can be found in the [example](https://github.com/fluid-design-io/python-iox-installer/tree/master/examples) folder
 - Single Mode:
   - Runs a single command from the following actions
 
