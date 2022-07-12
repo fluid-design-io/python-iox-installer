@@ -108,6 +108,7 @@ There are two modes it can run:
 
 **Switch language**
 
+See [Language list](#localization) for more information
     python iox_benja.py -l ko
 
 **Enable debug mode**
@@ -120,8 +121,10 @@ There are two modes it can run:
 
 # Localization
 
-- English
-- Korean
+| Language | Code |
+| -------- | ---- |
+| English | en |
+| Korean | ko |
 
 https://user-images.githubusercontent.com/13263720/173143602-21cdb3c4-279f-4ecd-be3d-919834ae0fca.mp4
 
