@@ -6,4 +6,3 @@ releases/
 /ssh-test.py
 /iox_install_sj23.csv
 # ignore any .pyc files
-*.pyc
