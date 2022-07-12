@@ -109,6 +109,7 @@ There are two modes it can run:
 **Switch language**
 
 See [Language list](#localization) for more information
+
     python iox_benja.py -l ko
 
 **Enable debug mode**
