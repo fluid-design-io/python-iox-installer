@@ -8,15 +8,15 @@ This program is an automated installer for the Cisco Iox client software.
 
 # Features
 
-- Import a list of Iox devices from a CSV file
-- Create/delete multiple iox profiles
-- Install multiple Iox clients
-- SSH support for enable AP configurations
-- Generate package_config.ini file automatically based on profile ip
-- Check AP status and list of installed apps
-- Threading support, runs multiple ioxclient at once
-- Simplified listing status, list and profiles overhead, only showing what's important
-- Localization support
+- 🗄 Import a list of Iox devices from a CSV file
+- 👥 Create/delete multiple iox profiles
+- 📦 Install multiple Iox clients
+- 💡 SSH support for enable AP configurations
+- 🔧 Generate package_config.ini file automatically based on profile ip
+- ✅ Check AP status and list of installed apps
+- 🏎 Threading support, runs multiple ioxclient at once
+- 📄 Simplified listing status, list and profiles overhead, only showing what's important
+- 🌎 Localization support, see [🌎 Localization](#localization)
 
 # Requirements
 
@@ -33,6 +33,8 @@ Make sure you have the `package_benja.tar` file in the same directory as this pr
     python iox_benja.py # variables...
 
     # Run the program with the --help flag to see the usage
+
+Example usage: [here](#example-commands)
 
 # Commands
 
@@ -62,51 +64,63 @@ There are two modes it can run:
 | -v, --version | version | Version | No | False | bool |
 | -l, --language | language | The language of the program. | No | en | str |
 
----
-
 # Example Commands
 
 **Full install**
 
-    python iox_benja.py -c ./examples/iox_install.csv
+    python iox_benja.py
+    # Or install a particular csv file
+    python iox_benja.py -c iox_install.csv
 
 **Create profile**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m create 
+    python iox_benja.py -m create 
 
 **Delete profile**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m delete 
+    python iox_benja.py -m delete 
 
 **Install client**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m install 
+    python iox_benja.py -m install 
 
 **Uninstall client**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m uninstall 
+    python iox_benja.py -m uninstall 
 
 **Start client**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m start 
+    python iox_benja.py -m start 
 
 **Stop client**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m stop 
+    python iox_benja.py -m stop 
 
 **Status client**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m status 
+    python iox_benja.py -m status 
 
 **List apps**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m list 
+    python iox_benja.py -m list 
 
 **List profiles**
 
-    python iox_benja.py -c ./examples/iox_install.csv -m profiles
+    python iox_benja.py -m profiles
 
-# Supported languages
+**Switch language**
+
+    python iox_benja.py -l ko
+
+**Enable debug mode**
+
+    python iox_benja.py -d
+
+**Check version**
+
+    python iox_benja.py -v
+
+# Localization
 
 - English
 - Korean
