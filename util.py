@@ -3,6 +3,7 @@ import os
 import json
 import time
 import subprocess
+import settings
 
 
 def execute_command(ps, command, sleep=0.03):
@@ -85,6 +86,16 @@ def get_iox_version():
 
 
 def get_sys_msg(key):
-    with open('sys_msg.json') as f:
-        error_msg = json.load(f)
-    return f"[{key}]:{error_msg[key]}"
+    # Get language from settings.py
+    language = settings.language
+    # Get the translation file from the language folder inside the locales folder
+    translation_file = os.path.join(
+        'locales', language, 'translation.json')
+    # Read the translation file
+    with open(translation_file, 'r') as f:
+        translation = json.load(f)
+        # Return the translation for the key if it exists, otherwise return the key
+        if key in translation:
+            return translation[key]
+        else:
+            return key
