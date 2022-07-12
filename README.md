@@ -11,10 +11,12 @@ This program is an automated installer for the Cisco Iox client software.
 - Import a list of Iox devices from a CSV file
 - Create/delete multiple iox profiles
 - Install multiple Iox clients
+- SSH support for enable AP configurations
 - Generate package_config.ini file automatically based on profile ip
 - Check AP status and list of installed apps
 - Threading support, runs multiple ioxclient at once
 - Simplified listing status, list and profiles overhead, only showing what's important
+- Localization support
 
 # Requirements
 
@@ -32,10 +34,6 @@ Make sure you have the `package_benja.tar` file in the same directory as this pr
 
     # Run the program with the --help flag to see the usage
 
-# Issues
-
-Currently you have to manually go through the day0 configuration when ioxclient is installed. Otherwise the program cannot create the profiles.
-
 # Commands
 
 There are two modes it can run:
@@ -43,31 +41,26 @@ There are two modes it can run:
 - Batch Mode _(recommend)_:
   - Runs commands from a csv file
   - An example of csv file can be found in the `examples` dir
-  - Variables:
-    - `-c`, `--csv`: path to csv file, which will be used to run commands. Default is `iox_install.csv`
-    - `-m`, `--mode`: Please refer to the `mode` section below. Default is `full`
-- Single Mode
-  - Variables:
-    - `-p`, `--profile`: required=False,The name of the profile to be created
-    - `-ip` `--ip`: required= False,The ip address of the profile
-    - `-u`, `--username`: required=False,The username of the profile
-    - `-pass`, `--password`: required= False,The password of the profile
-    - `-s`, `--secret`: The enable secret of the profile
-    - `-i`, `--image`: required=False,A .tar file containing the Iox client software
-    - `-a`, `--activation`: required=False,A json file containing the activation key
-    - `-S`, `--server`: required=False,The ip address of the server, used when generating package_config.ini
-    - `-m`, `--mode`: required=False, choices=[`full`, `create`, `install`, `status`, `start`, `stop`, `uninstall`, `list`, `delete`, `profiles`], default=`full`, The mode of the program.
-      - `full`: `Default`, create profile, install, start the client.
-      - `create`: create profile.
-      - `delete`: delete the profile
-      - `install`: install the client.
-      - `uninstall`: uninstall the client.
-      - `start`: start the client.
-      - `stop`: stop the client.
-      - `status`: check the status of the client.
-      - `list`: list all the apps and states installed on the client.
-      - `profiles`: list all the profiles.
-    - `-h`, `--help`: show this help message and exit
+- Single Mode:
+  - Runs a single command from the following actions
+
+# Variables
+
+| Argument | Value | Description | Required | Default | Type |
+| -------- | ---- | ----------- | -------- | ------- | ---- |
+| -c, --csv | csv_path | The csv file containing the variables. | No | iox_install.csv | str |
+| -p, --profile | ap_profile | The name of the profile to be created | No | None | str |
+| -ip, --ip | ap_ip | The ip address of the profile | No | None | str |
+| -u, --username | ap_username | The username of the profile | No | admin | str |
+| -pass, --password | ap_password | The password of the profile | No | None | str |
+| -s, --secret | ap_secret | The enable secret of the profile | No | None | str |
+| -i, --image | image_path | A .tar file containing the Iox client software | No | None | str |
+| -a, --activation | activation_path | A json file containing the activation key | No | activation.json | str |
+| -S, --server | server_ip | The ip address of the server, used when generating package_config.ini | No | None | str |
+| -m, --mode | mode | The mode of the program. | Yes | full | str |
+| -d, --debug | debug | Debug mode | No | False | bool |
+| -v, --version | version | Version | No | False | bool |
+| -l, --language | language | The language of the program. | No | en | str |
 
 ---
 
@@ -113,11 +106,26 @@ There are two modes it can run:
 
     python iox_benja.py -c ./examples/iox_install.csv -m profiles
 
+# Supported languages
+
+- English
+- Korean
 
 https://user-images.githubusercontent.com/13263720/173143602-21cdb3c4-279f-4ecd-be3d-919834ae0fca.mp4
 
+# Contributing
+
+- Fork the repository
+- Create a new branch
+- Add your changes
+- Commit your changes
+- Push your changes to the remote repository
+- Open an issue or pull request
+- Keep in touch
 
 ---
 
-License: MIT
+# License
+
+MIT License
 Author: Oliver Pan, 2022
