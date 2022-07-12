@@ -5,4 +5,9 @@ releases/
 /package_benja_v_1_8_7_c1_small.tar
 /ssh-test.py
 /iox_install_sj23.csv
-# ignore any .pyc files
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.py[cod]
+*$py.class
