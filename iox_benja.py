@@ -12,6 +12,7 @@
 # The program will create a profile for each row in the excel file.
 
 import time
+import settings
 import concurrent.futures as cf
 import subprocess
 from read_csv import read_csv
@@ -20,12 +21,6 @@ from confirm_before_run import *
 from util import *
 from iox_tools import *
 # A function to get current working directory.
-
-introduction = """
-This program is an automated installer for the Cisco Iox client software.
-
-\033[4mCode written by: Oliver Pan, 2022\033[0m
-"""
 
 
 def main():
@@ -48,6 +43,9 @@ def main():
     else:
         install_type = "csv"
     # introduction
+    introduction = f"""
+    {get_sys_msg("iox_intro")}
+    """
     print(introduction)
     iox_version = get_iox_version()
     if iox_version == "0.0.0":
@@ -61,6 +59,7 @@ def main():
         subprocess.call(f"{program_path} profiles list", shell=True)
 
     debug_print("install_type: " + install_type, debug_enabled)
+    debug_print("install_mode: " + install_mode, debug_enabled)
     # If the csv file is not provided, the program will use the rest of the variables.
     # Else, the program will use the variables from the csv file.
     # Perform profile creatino if install_mode is "full" or "create"
@@ -88,7 +87,7 @@ def main():
                            bcolors.OKGREEN)
                 print(f'Generating file package_config_{ap_ip}.ini...\n')
                 start_iox_install(ap_profile, ap_ip, ap_image_path,
-                                  ap_activation, server_ip)
+                                  ap_activation, server_ip, debug_enabled)
             elif install_mode == "uninstall":
                 uninstall_iox(ap_profile)
             elif install_mode == "status":
@@ -108,10 +107,10 @@ def main():
             df = read_csv(csv_path)
             with cf.ThreadPoolExecutor(max_workers=len(df)) as executor:
                 if install_mode == "full" or install_mode == "install":  # perform iox installation
-                    color_text("Installing Iox client software...\n",
+                    color_text(f"{get_sys_msg('installing_iox')}\n",
                                bcolors.OKGREEN)
                     executor.map(
-                        start_iox_install, df['profile'], df['ip'], df['image'], df['activation'], df['server'])
+                        start_iox_install, df['profile'], df['ip'], df['image'], df['activation'], df['server'], [debug_enabled]*len(df))
                 elif install_mode == "uninstall":  # perform iox uninstallation
                     color_text("Uninstalling Iox...\n", bcolors.OKCYAN)
                     executor.map(uninstall_iox, df['profile'])
@@ -138,6 +137,7 @@ def main():
                     show_profiles()
 
 
+settings.init()
 if confirm_before_run():
     start = time.perf_counter()
     main()

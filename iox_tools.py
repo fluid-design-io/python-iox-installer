@@ -77,48 +77,52 @@ def delete_iox_profile(install_type, csv_path, ap_profile):
         # print(f"\n🚀{ap_profile} profile deleted🚀\n")
 
 
-def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip):
+def start_iox_install(ap_profile, ap_ip, ap_image_path, ap_activation, server_ip, debug_enabled):
     program_path = get_cwd()
-    app_state = check_iox_status(ap_profile, False)
+    app_state = check_iox_status(ap_profile, debug_enabled)
     if app_state == "RUNNING":
         color_text(
             f"{ap_profile}: {get_sys_msg('iox_already_running')}", bcolors.OKGREEN)
         return
-    else:
-        with yaspin(Spinners.moon, text=f"Generating package_config.ini") as sp:
+    with yaspin(Spinners.moon, text=get_sys_msg("gen_package_config")) as sp:
 
-            config_ini_name = gen_ini(ap_ip, server_ip)
+        config_ini_name = gen_ini(ap_ip, server_ip)
 
-            sp.text = f"Installing Iox client software"
-            ps_install = run_terminal(
-                f'{program_path} --profile {ap_profile} app install iox_benja {ap_image_path}')
+        sp.text = get_sys_msg('installing_iox')
+        ps_install = run_terminal(
+            f'{program_path} --profile {ap_profile} app install iox_benja {ap_image_path}')
 
-            ps_install.communicate()[0].decode()
+        ps_install.communicate()[0].decode()
 
-            sp.spinner = Spinners.simpleDotsScrolling
+        sp.spinner = Spinners.simpleDotsScrolling
 
-            sp.text = f"Activating Iox client software"
-            ps_activation = run_terminal(
-                f'{program_path} --profile {ap_profile} app activate iox_benja --payload {ap_activation}')
-            ps_activation.communicate()[0].decode()
+        sp.text = get_sys_msg('activating_iox')
+        ps_activation = run_terminal(
+            f'{program_path} --profile {ap_profile} app activate iox_benja --payload {ap_activation}')
+        activation_res = ps_activation.communicate()[0].decode()
+        debug_print(f"ps_activation: {activation_res}\n", debug_enabled)
 
-            sp.text = f"Setting package_config.ini"
-            ps_config = run_terminal(
-                f'{program_path} --profile {ap_profile} app setconfig iox_benja {config_ini_name}')
-            config_res = ps_config.communicate()[0].decode()
-            if "Error" in config_res:
-                err_msg = get_sys_msg("setting_package")
-                color_text(
-                    f"\n{ap_profile}: {err_msg}", bcolors.FAIL)
-                print(config_res)
-            # color_text(
-            #     f"Starting Iox client software for {ap_profile}", bcolors.OKGREEN)
+        sp.text = get_sys_msg('setting_package_ini')
+        ps_config = run_terminal(
+            f'{program_path} --profile {ap_profile} app setconfig iox_benja {config_ini_name}')
+        config_res = ps_config.communicate()[0].decode()
+        debug_print(f"config_res: {config_res}", debug_enabled)
+        if "Error" in config_res:
+            err_msg = get_sys_msg("setting_package_error")
+            color_text(
+                f"\n{ap_profile}: {err_msg}", bcolors.FAIL)
+            print(config_res)
+        # color_text(
+        #     f"Starting Iox client software for {ap_profile}", bcolors.OKGREEN)
 
-            sp.text = f"Starting Iox client software"
-            start_iox_app(ap_profile)
-            check_iox_status(ap_profile)
-            # remove the generated ini file
-            del_ini(ap_ip, server_ip)
+        sp.text = get_sys_msg('starting_iox')
+        debug_print(
+            f"Starting Iox client software for {ap_profile}", debug_enabled)
+        start_iox_app(ap_profile)
+        check_iox_status(ap_profile, debug_enabled)
+        # remove the generated ini file
+        debug_print('deleting ini file', debug_enabled)
+        del_ini(ap_ip, server_ip)
 
 
 def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_password, debug_enabled):
@@ -145,10 +149,9 @@ def start_iox_profile(mode, csv_path, ap_profile, ap_ip, ap_username, ap_passwor
 
 
 def start_iox_app(ap_profile, csv_path, ap_ip, ap_username, ap_password, ap_secret, debug_enabled):
-    def check_res_has_error(res):
+    def check_res_has_error(response):
+        res = response.split("\n")
         for line in res:
-            if "Error:" in line:
-                color_text(f"{ap_profile}: Error", bcolors.FAIL)
             if "description" in line:
                 if "/dev/ttyUSB0" in line:
                     color_text(
@@ -158,33 +161,19 @@ def start_iox_app(ap_profile, csv_path, ap_ip, ap_username, ap_password, ap_secr
         return False
 
     program_path = get_cwd()
-    app_state = check_iox_status(ap_profile, False)
-
+    app_state = check_iox_status(ap_profile, debug_enabled)
     if app_state == "RUNNING":
         color_text(
             f"{ap_profile}: {get_sys_msg('iox_already_running')}", bcolors.OKGREEN)
         return
-    else:
-        ps_start = run_terminal(
-            f'{program_path} --profile {ap_profile} app start iox_benja')
-        res = ps_start.communicate()[0].decode()
-        debug_print(f"{ap_profile}: {res}", debug_enabled)
-    # res looks like this:
-    # Error occured,
-    # Currently active profile :  AP-9120-01
-    # Command Name:  application-start
-    # Error. Server returned 500
-    # {
-    #  "description": "Error while starting the app: iox_benja, Cause: Failed to start container: Error: internal error: guest failed to start: Unable to access /dev/ttyUSB0: No such file or directory\n",
-    #  "errorcode": -1014,
-    #  "message": "Error while changing app state"}
-    # Activating Profile  AP-9120-01
+    ps_start = run_terminal(
+        f'{program_path} --profile {ap_profile} app start iox_benja')
+    res = ps_start.communicate()[0].decode()
+    debug_print(f"{ap_profile}: {res}", debug_enabled)
 
-    # If Error. then print the error message
-    res = res.split("\n")
     if check_res_has_error(res):
         debug_print(
-            f"{ap_profile}: {get_sys_msg('attemp_ssh_usb')}", debug_enabled)
+            f"{ap_profile}: {get_sys_msg('attempt_ssh_usb')}", debug_enabled)
         ssh_add_usb_module(ap_ip, ap_username, ap_password,
                            ap_secret, debug_enabled)
         debug_print(f"{ap_profile}: Rerunning the command", debug_enabled)
@@ -192,6 +181,9 @@ def start_iox_app(ap_profile, csv_path, ap_ip, ap_username, ap_password, ap_secr
             f'{program_path} --profile {ap_profile} app start iox_benja')
         res = ps_start.communicate()[0].decode()
         debug_print(f"{ap_profile}: {res}", debug_enabled)
+    else:
+        color_text(
+            f"{ap_profile}: {get_sys_msg('iox_started')}", bcolors.OKGREEN)
 
 
 def stop_iox_app(ap_profile):
@@ -261,7 +253,7 @@ def check_iox_list(ap_profile):
             if isEndCounter == 1:
                 if appCounter == 0:
                     color_text(
-                        f"{ap_profile} have 0 app installed", bcolors.BOLD)
+                        f"{ap_profile} {get_sys_msg('profile_0_installed')}", bcolors.BOLD)
                 return
             isEndCounter += 1
 

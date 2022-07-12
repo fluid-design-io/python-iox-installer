@@ -42,7 +42,7 @@ def confirm_before_run():
     else:
         csv = "iox_install.csv" if args.csv is None else args.csv
         color_text(
-            f"\n🚀Running Iox client software for {csv}🚀\n", bcolors.HEADER)
+            f"\n🚀{get_sys_msg('running_iox_sofeware_for')} {csv}🚀\n", bcolors.HEADER)
     if install_mode == "full" or install_mode == "create":
         # confirm before running, if user enter "n" or "N", exit the program
         m = "full install" if install_mode == "full" else "create profile"
