@@ -1,0 +1,20 @@
+{
+  "setting_package_error": "Error while setting package_config.ini. Please make sure that ssh is enabled and that you have the correct permissions.",
+  "version_not_found": "Fatal error: unable to check iox version, please check if you can run iox app first.",
+  "no_usb_found": "Please make sure the USB device is plugged in.",
+  "attempt_ssh_usb": "Attempting to connect SSH to enable usb module",
+  "ap_state_unkown": "is in an unkown state, make sure you have correct profiles added to iox_client.conf",
+  "profile_not_installed": "is not installed, no need to uninstall",
+  "iox_already_running": "Iox client software is already running",
+  "installing_iox": "Installing Iox client software...",
+  "activating_iox": "Activating Iox client software...",
+  "setting_package_ini": "Setting package_config.ini...",
+  "starting_iox": "Starting Iox client software...",
+  "stopping_iox": "Stopping Iox client software...",
+  "uninstalling_iox": "Uninstalling Iox client software...",
+  "iox_started": "Iox client software started successfully",
+  "profile_0_installed": "have 0 app installed",
+  "gen_package_config": "Generating package_config.ini",
+  "running_iox_sofeware_for": "Running Iox client software for",
+  "iox_intro": "This program is an automated installer for the Cisco Iox client software.\n\n\\033[4m Code written by: Oliver Pan, 2022 \\033[0m"
+}
