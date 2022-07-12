@@ -1,4 +1,5 @@
 import argparse
+import settings
 
 
 def get_args():
@@ -39,5 +40,36 @@ def get_args():
                         """)
     parser.add_argument("-d", "--debug", required=False,
                         action="store_true", help="Debug mode")
+    # add a version flag
+    parser.add_argument("-v", "--version", action="version",
+                        version="%(prog)s 1.5.0")
+    # add a language flag, supports English and Korean
+    parser.add_argument("-l", "--language", required=False, default="en",
+                        choices=["en", "ko"],
+                        help="The language of the program.")
     args = parser.parse_args()
+    # Set settings
+    settings.language = args.language
+    settings.debug = args.debug
     return args
+
+    # Make a markdown table for the arguments
+
+
+table = """
+| Argument | Value | Description | Required | Default | Type |
+| -------- | ---- | ----------- | -------- | ------- | ---- |
+| -c, --csv | csv_path | The csv file containing the variables. | Yes | None | str |
+| -p, --profile | ap_profile | The name of the profile to be created | No | None | str |
+| -ip, --ip | ap_ip | The ip address of the profile | No | None | str |
+| -u, --username | ap_username | The username of the profile | No | admin | str |
+| -pass, --password | ap_password | The password of the profile | No | None | str |
+| -s, --secret | ap_secret | The enable secret of the profile | No | None | str |
+| -i, --image | image_path | A .tar file containing the Iox client software | No | None | str |
+| -a, --activation | activation_path | A json file containing the activation key | No | activation.json | str |
+| -S, --server | server_ip | The ip address of the server, used when generating package_config.ini | No | None | str |
+| -m, --mode | mode | The mode of the program. | Yes | full | str |
+| -d, --debug | debug | Debug mode | No | False | bool |
+| -v, --version | version | Version | No | False | bool |
+| -l, --language | language | The language of the program. | No | en | str |
+"""
